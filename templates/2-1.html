@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="Generator" content="Microsoft Word 15 (filtered)">
+    <style>
+        @page {
+            size: 8.5in 11in;
+            margin: 56.7pt 42.55pt 56.7pt 85.05pt;
+        }
+
+        body {
+            font-family: "Times New Roman", serif;
+            font-size: 14pt;
+            line-height: 150%;
+            word-wrap: break-word;
+        }
+
+        .text-regular {
+            font-size: 14pt;
+            line-height: 150%;
+            font-family: "Times New Roman", serif;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+            line-height: 150%;
+        }
+
+        .text-justify {
+            text-align: justify;
+            text-indent: 35.45pt;
+            line-height: 150%;
+        }
+
+        .signature-cell {
+            vertical-align: top;
+            padding: 0 0.5pt;
+        }
+
+        .signature-line {
+            margin-bottom: 0;
+            text-align: right;
+        }
+
+        .placeholder {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="WordSection1">
+
+        <p class="text-right">
+            Ректору НИЯУ МИФИ<br>
+            {{rectorShortDative}}
+        </p>
+
+        <p class="text-center">
+            <br><br><br>
+            Уважаемый {{rectorFnameSnameNominative}}!
+        </p>
+
+        <p class="text-justify">
+            Прошу Вас подписать заключение Национального исследовательского ядерного университета
+            «МИФИ» о приёме к защите диссертации
+            {{authorGenitive}}
+            «{{thesisTitle}}»,
+            представленной на соискание учёной степени
+            {{degreeGenitive}}
+            {{fieldGenitive}} наук по специальности
+            {{specialtyNumber}} —
+            {{specialtyName}}.
+            {{authorShortNominative}} окончил аспирантуру НИЯУ МИФИ
+            {{graduationDate}}.
+            Защита планируется на
+            {{defenseDate}}.
+        </p>
+
+        <p class="text-justify">&nbsp;<br><br><br></p>
+
+
+        <table border="0" cellspacing="0" cellpadding="0" width="630" style="border-collapse:collapse;">
+            <tr>
+                <td width="340" style="vertical-align: bottom; padding: 0 0.5pt; line-height: 150%;">
+                    Председатель Совета
+                    <span style="color:black;">по аттестации и<br>
+                        подготовке научно-педагогических кадров</span>
+                    {{chairCertCouncilDegreeShortNominative}} {{chairCertCouncilFieldShortGenitive}}.н,
+                    {{chairCertCouncilRankNominative}}
+                </td>
+                <td width="290" style="vertical-align: bottom; padding: 0 0.5pt; text-align: right; line-height: 150%;">
+                    ___________/ {{chairCertCouncilShortNominative}}/
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>
