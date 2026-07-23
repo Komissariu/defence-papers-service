@@ -41,13 +41,6 @@
             text-indent: 1.5em;
         }
 
-        /* Стиль для полей ввода (подчёркнутые места) */
-        .field {
-            color: #0000ff;
-            text-decoration: underline;
-            font-weight: normal;
-        }
-
         /* Для подписей */
         .signature-line {
             display: flex;
@@ -108,15 +101,6 @@
             height: 0.1in;
         }
 
-        /* Для синих полей */
-        .blue {
-            color: #0000ff;
-        }
-
-        .underline {
-            text-decoration: underline;
-        }
-
         .bold {
             font-weight: bold;
         }
@@ -130,13 +114,13 @@
         «УТВЕРЖДАЮ»
     </p>
     <p class="right" style="margin-right: 0.2in;">
-        Начальник Управления научных исследований НИЯУ МИФИ
+        {{approverPosition}}
     </p>
     <p class="right" style="margin-right: 0.1in;">
-        _______________ В.А. Сенюков
+        _______________ {{approverName}}
     </p>
     <p class="right" style="margin-right: 0.5in;">
-        «___» _______________ 202<span class="blue bold">_</span> г.
+        {{approvalDate}}
     </p>
 
     <div class="spacer"></div>
@@ -153,24 +137,20 @@
 
     <!-- Текст -->
     <p class="justify p-indent">
-        Экспертная комиссия №1.1.1.1 кафедры <span class="blue underline">наименование кафедры (№ <span
-                lang="en">NN</span>)</span> федерального государственного автономного образовательного учреждения
-        высшего образования «Национальный исследовательский ядерный университет «МИФИ» Министерства науки и высшего
-        образования Российской Федерации
+        Экспертная комиссия {{comissionNumber}} кафедры {{departmentName}} федерального государственного автономного
+        образовательного учреждения высшего образования «Национальный исследовательский ядерный университет «МИФИ»
+        Министерства науки и высшего образования Российской Федерации
     </p>
 
     <div class="spacer-sm"></div>
 
     <ol>
         <li class="justify">
-            Рассмотрела материалы <span class="blue underline bold">автореферата диссертации/диссертации</span> <span
-                class="blue underline">ФИО соискателя полностью (род)</span> «<span class="blue underline">Название
-                диссертации</span>», в кол-ве <span class="blue underline"><span lang="en">NN</span></span> листов на
-            соискание ученой степени <span class="blue underline">кандидата/доктора
-                физико-математических/технических/экономических</span> наук по специальности <span
-                class="blue underline">Номер – Название</span>, представленные для размещения на официальном сайте
-            Национального исследовательского ядерного университета «МИФИ» и Высшей аттестационной комиссии при
-            Министерстве науки и высшего образования Российской Федерации.
+            Рассмотрела материалы {{documentType}} {{applicantFullName}} «{{thesisTitle}}», в кол-ве {{pageCount}}
+            листов на соискание ученой степени {{degreeType}} {{degreeField}} наук по специальности
+            {{specialtyCodeAndName}}, представленные для размещения на официальном сайте Национального
+            исследовательского ядерного университета «МИФИ» и Высшей аттестационной комиссии при Министерстве науки и
+            высшего образования Российской Федерации.
         </li>
     </ol>
 
@@ -203,37 +183,34 @@
         <u>ЗАКЛЮЧЕНИЕ</u>:
     </p>
     <p class="justify p-indent">
-        В результате рассмотрения материалов <span class="blue underline bold">автореферата
-            диссертации/диссертации</span> <span class="blue underline">ФИО соискателя полностью (род)</span> «<span
-            class="blue underline">Название диссертации</span>» на соискание ученой степени <span
-            class="blue underline">кандидата/доктора физико-математических/технических/экономических</span> наук по
-        специальности <span class="blue underline">Номер – Название,</span> по существу их содержания, комиссия считает
-        возможным их опубликование на официальном сайте Национального исследовательского ядерного университета «МИФИ» и
-        Высшей аттестационной комиссии при Министерстве науки и высшего образования Российской Федерации, так как они не
-        содержат сведений, составляющих государственную тайну.
+        В результате рассмотрения материалов {{documentType}} {{applicantFullName}} «{{thesisTitle}}» на соискание
+        ученой степени {{degreeType}} {{degreeField}} наук по специальности {{specialtyCodeAndName}}, по существу их
+        содержания, комиссия считает возможным их опубликование на официальном сайте Национального исследовательского
+        ядерного университета «МИФИ» и Высшей аттестационной комиссии при Министерстве науки и высшего образования
+        Российской Федерации, так как они не содержат сведений, составляющих государственную тайну.
     </p>
 
     <div class="spacer"></div>
 
     <!-- Подписи -->
     <div class="signature-block">
-        <p>Председатель комиссии №1.1.1.1</p>
+        <p>Председатель комиссии {{comissionNumber}}</p>
         <div class="signature-row">
-            <span class="label">Должность, подразделение</span>
+            <span class="label">{{commissionChairPosition}}</span>
             <span class="dash"></span>
-            <span class="name">И.О. Фамилия</span>
+            <span class="name">{{commissionChairName}}</span>
         </div>
 
         <p style="margin-top: 0.2in;">Члены комиссии</p>
         <div class="signature-row">
             <span class="label"></span>
             <span class="dash"></span>
-            <span class="name">И.О. Фамилия №1</span>
+            <span class="name">{{member1Name}}</span>
         </div>
         <div class="signature-row">
             <span class="label"></span>
             <span class="dash"></span>
-            <span class="name">И.О. Фамилия №2</span>
+            <span class="name">{{member2Name}}</span>
         </div>
     </div>
 
