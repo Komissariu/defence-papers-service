@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+  <title>Анкета · загрузка и скачивание</title>
+  <link rel="stylesheet" href="style.css"> <!-- или styles.css -->
+</head>
+<body>
+<div class="app-wrapper">
+  <!-- ОСНОВНАЯ ФОРМА -->
+  <main class="form-container">
+    <!-- Шапка: заголовок слева, кнопка темы справа -->
+    <div class="form-header">
+      <h1 class="form-title">Анкета участника</h1>
+      <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+        <span id="themeIcon">🌙</span>
+      </button>
+    </div>
+
+    <!-- Кнопки действий (загрузка / скачивание) -->
+    <div class="action-buttons" style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+      <button class="btn-action btn-upload" id="uploadBtn">Загрузить на сервер</button>
+      <button class="btn-action btn-download" id="downloadBtn">Скачать</button>
+    </div>
+
+    <div class="form-sub">Нажмите на раздел в панели справа, чтобы открыть его.</div>
+
+    <!-- Секция 1 -->
+    <section class="section" data-section="1">
+      <div class="section-header" data-target="1">
+        <div class="title-group">
+          <span class="section-title">Личные данные</span>
+          <span class="badge">обязательно</span>
+        </div>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="section-content" data-content="1">
+        <div class="field-group">
+          <label for="fullname">Полное имя</label>
+          <input type="text" id="fullname" placeholder="Иванов Иван Иванович" value="">
+        </div>
+        <div class="field-group">
+          <label for="email">Электронная почта</label>
+          <input type="email" id="email" placeholder="ivan@example.com" value="">
+        </div>
+        <div class="field-group">
+          <label for="age">Возраст</label>
+          <input type="number" id="age" placeholder="25" value="">
+        </div>
+      </div>
+    </section>
+
+    <!-- Секция 2 -->
+    <section class="section" data-section="2">
+      <div class="section-header" data-target="2">
+        <div class="title-group">
+          <span class="section-title">Опыт и навыки</span>
+          <span class="badge">выборочно</span>
+        </div>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="section-content" data-content="2">
+        <div class="field-group">
+          <label>Уровень владения HTML/CSS</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="html_css" value="beginner"> Начинающий</label>
+            <label class="radio-item"><input type="radio" name="html_css" value="middle"> Средний</label>
+            <label class="radio-item"><input type="radio" name="html_css" value="expert"> Эксперт</label>
+          </div>
+        </div>
+        <div class="field-group">
+          <label for="stack">Технологии (кратко)</label>
+          <input type="text" id="stack" placeholder="React, Node, Python" value="">
+        </div>
+        <div class="field-group">
+          <label>Инструменты, которыми пользуетесь</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox" name="tools" value="figma"> Figma</label>
+            <label class="checkbox-item"><input type="checkbox" name="tools" value="vscode"> VS Code</label>
+            <label class="checkbox-item"><input type="checkbox" name="tools" value="git"> Git</label>
+            <label class="checkbox-item"><input type="checkbox" name="tools" value="docker"> Docker</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Секция 3 -->
+    <section class="section" data-section="3">
+      <div class="section-header" data-target="3">
+        <div class="title-group">
+          <span class="section-title">Дополнительно</span>
+          <span class="badge">по желанию</span>
+        </div>
+        <span class="toggle-icon">▼</span>
+      </div>
+      <div class="section-content" data-content="3">
+        <div class="field-group">
+          <label for="about">Расскажите о себе</label>
+          <textarea id="about" placeholder="Ваши увлечения, проекты..."></textarea>
+        </div>
+        <div class="field-group">
+          <label for="city">Город</label>
+          <select id="city">
+            <option value="">Выберите город</option>
+            <option value="msk">Москва</option>
+            <option value="spb">Санкт-Петербург</option>
+            <option value="ekb">Екатеринбург</option>
+            <option value="nsk">Новосибирск</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <button class="btn-submit" type="button" onclick="alert('Форма отправлена (демо)')">Отправить анкету</button>
+  </main>
+
+  <!-- БОКОВАЯ ПАНЕЛЬ -->
+  <aside class="side-panel" id="sidePanel">
+    <div class="panel-title">Разделы формы</div>
+    <div id="progressList"></div>
+    <div style="margin-top: 20px; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--border-light); padding-top: 16px;">
+      <span id="totalProgressText">Общий прогресс: 0%</span>
+    </div>
+  </aside>
+</div>
+
+<script>
+  (function() {
+    // ========== ПЕРЕКЛЮЧЕНИЕ ТЕМЫ (круглая кнопка, только иконка) ==========
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    let currentTheme = 'light';
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : '');
+      currentTheme = theme;
+      themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      localStorage.setItem('themePreference', theme);
+    }
+
+    function getSystemTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    const stored = localStorage.getItem('themePreference');
+    if (stored === 'dark' || stored === 'light') {
+      applyTheme(stored);
+    } else {
+      applyTheme(getSystemTheme());
+    }
+
+    const systemThemeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+    let manualOverride = false;
+    systemThemeMedia.addEventListener('change', (e) => {
+      if (!manualOverride) {
+        applyTheme(e.matches ? 'dark' : 'light');
+      }
+    });
+
+    themeToggle.addEventListener('click', function() {
+      manualOverride = true;
+      const next = currentTheme === 'light' ? 'dark' : 'light';
+      applyTheme(next);
+    });
+
+    // ========== ОСТАЛЬНОЙ СКРИПТ ФОРМЫ (без изменений) ==========
+    const sectionsConfig = [
+      {
+        id: 1,
+        name: 'Личные данные',
+        fields: [
+          { selector: '#fullname', type: 'value' },
+          { selector: '#email', type: 'value' },
+          { selector: '#age', type: 'value' }
+        ]
+      },
+      {
+        id: 2,
+        name: 'Опыт и навыки',
+        fields: [
+          { selector: 'input[name="html_css"]:checked', type: 'radio' },
+          { selector: '#stack', type: 'value' },
+          { selector: 'input[name="tools"]:checked', type: 'checkboxes' }
+        ]
+      },
+      {
+        id: 3,
+        name: 'Дополнительно',
+        fields: [
+          { selector: '#about', type: 'value' },
+          { selector: '#city', type: 'select' }
+        ]
+      }
+    ];
+
+    const uploadBtn = document.getElementById('uploadBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    function getFieldValue(selector, type) {
+      const el = document.querySelector(selector);
+      if (!el) return null;
+      if (type === 'radio') {
+        const checked = document.querySelector(selector);
+        return checked ? checked.value : null;
+      } else if (type === 'checkboxes') {
+        const checkedBoxes = document.querySelectorAll(selector);
+        return checkedBoxes.length > 0 ? checkedBoxes.length : 0;
+      } else if (type === 'select') {
+        return el.value ? el.value : null;
+      } else {
+        return el.value && el.value.trim() !== '' ? el.value.trim() : null;
+      }
+    }
+
+    function isFieldFilled(selector, type) {
+      const val = getFieldValue(selector, type);
+      if (type === 'checkboxes') return val > 0;
+      return val !== null && val !== '' && val !== undefined;
+    }
+
+    function collectFormData() {
+      const data = {};
+      document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"], textarea, select').forEach(el => {
+        if (el.id) data[el.id] = el.value;
+      });
+      const radioChecked = document.querySelector('input[name="html_css"]:checked');
+      if (radioChecked) data['html_css'] = radioChecked.value;
+      const checkedTools = [];
+      document.querySelectorAll('input[name="tools"]:checked').forEach(cb => checkedTools.push(cb.value));
+      if (checkedTools.length) data['tools'] = checkedTools.join(', ');
+      return data;
+    }
+
+    function openSection(sectionId) {
+      document.querySelectorAll('.section-content').forEach(content => content.classList.remove('open'));
+      document.querySelectorAll('.toggle-icon').forEach(icon => icon.classList.remove('open'));
+      const targetContent = document.querySelector(`.section-content[data-content="${sectionId}"]`);
+      const targetIcon = document.querySelector(`.section-header[data-target="${sectionId}"] .toggle-icon`);
+      if (targetContent) targetContent.classList.add('open');
+      if (targetIcon) targetIcon.classList.add('open');
+    }
+
+    function updateProgress() {
+      const progressList = document.getElementById('progressList');
+      if (!progressList) return;
+
+      let totalFilled = 0;
+      let totalFields = 0;
+      let html = '';
+
+      sectionsConfig.forEach(section => {
+        let filledCount = 0;
+        const fields = section.fields;
+        fields.forEach(f => {
+          totalFields++;
+          if (isFieldFilled(f.selector, f.type)) filledCount++;
+        });
+        const percent = fields.length > 0 ? Math.round((filledCount / fields.length) * 100) : 0;
+        totalFilled += filledCount;
+
+        html += `
+          <div class="section-progress" data-section-id="${section.id}">
+            <div class="section-name">
+              <span>${section.name}</span>
+              <span>${percent}%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="width: ${percent}%;"></div>
+            </div>
+            <div class="status-text">${filledCount} из ${fields.length} заполнено</div>
+          </div>
+        `;
+      });
+
+      progressList.innerHTML = html;
+
+      document.querySelectorAll('.section-progress').forEach(item => {
+        item.addEventListener('click', function() {
+          const id = this.dataset.sectionId;
+          if (id) openSection(id);
+        });
+      });
+
+      const totalPercent = totalFields > 0 ? Math.round((totalFilled / totalFields) * 100) : 0;
+      const totalText = document.getElementById('totalProgressText');
+      if (totalText) totalText.textContent = `Общий прогресс: ${totalPercent}%`;
+
+      const anyFilled = totalFilled > 0;
+      const allFilled = totalPercent === 100 && totalFields > 0;
+
+      uploadBtn.classList.toggle('visible', anyFilled);
+      downloadBtn.classList.toggle('visible', allFilled);
+    }
+
+    uploadBtn.addEventListener('click', function() {
+      const data = collectFormData();
+      const json = JSON.stringify(data, null, 2);
+      alert('Данные готовы к отправке на сервер (демо).\n\n' + json);
+    });
+
+    downloadBtn.addEventListener('click', function() {
+      const data = collectFormData();
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `anketa_${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+
+    function attachListeners() {
+      const inputs = document.querySelectorAll('input, textarea, select');
+      inputs.forEach(input => {
+        input.addEventListener('input', updateProgress);
+        input.addEventListener('change', updateProgress);
+      });
+      const radioCheck = document.querySelectorAll('input[type="radio"], input[type="checkbox"]');
+      radioCheck.forEach(el => {
+        el.addEventListener('change', updateProgress);
+      });
+    }
+
+    document.querySelectorAll('.section-header').forEach(header => {
+      header.addEventListener('click', function() {
+        const target = this.dataset.target;
+        if (target) openSection(target);
+      });
+    });
+
+    function init() {
+      attachListeners();
+      updateProgress();
+      openSection(1);
+    }
+
+    setTimeout(init, 30);
+    window.addEventListener('resize', updateProgress);
+  })();
+</script>
+</body>
+</html>
