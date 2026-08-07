@@ -1,130 +1,132 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-  <title>Панель администратора документов</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>Панель администратора документов</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<div class="container">
+    <div class="container">
 
-  <!-- шапка -->
-  <header class="admin-header">
-    <h1>Панель документов</h1>
-    <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
-      <span id="themeIcon">🌙</span> <span id="themeLabel">Тёмная</span>
-    </button>
-  </header>
+        <!-- шапка -->
+        <header class="admin-header">
+            <h1>Панель документов</h1>
+            <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+                <span id="themeIcon">🌙</span> <span id="themeLabel">Тёмная</span>
+            </button>
+        </header>
 
-  <!-- сетка секций -->
-  <div class="section-grid" id="sectionGrid">
-    <!-- НЕПРОВЕРЕННЫЕ -->
-    <section class="doc-section" data-status="unverified">
-      <div class="section-header">
-        <h2>Непроверенные</h2>
-        <span class="badge-count" id="countUnverified">0</span>
-      </div>
-      <div id="unverifiedList"></div>
-    </section>
+        <!-- сетка секций -->
+        <div class="section-grid" id="sectionGrid">
+            <!-- НЕПРОВЕРЕННЫЕ -->
+            <section class="doc-section" data-status="unverified">
+                <div class="section-header">
+                    <h2>Непроверенные</h2>
+                    <span class="badge-count" id="countUnverified">0</span>
+                </div>
+                <div id="unverifiedList"></div>
+            </section>
 
-    <!-- ПОДТВЕРЖДЕННЫЕ -->
-    <section class="doc-section" data-status="verified">
-      <div class="section-header">
-        <h2>Подтверждённые</h2>
-        <span class="badge-count" id="countVerified">0</span>
-      </div>
-      <div id="verifiedList"></div>
-    </section>
+            <!-- ПОДТВЕРЖДЕННЫЕ -->
+            <section class="doc-section" data-status="verified">
+                <div class="section-header">
+                    <h2>Подтверждённые</h2>
+                    <span class="badge-count" id="countVerified">0</span>
+                </div>
+                <div id="verifiedList"></div>
+            </section>
 
-    <!-- ОТВЕРГНУТЫЕ -->
-    <section class="doc-section" data-status="rejected">
-      <div class="section-header">
-        <h2>Отвергнутые</h2>
-        <span class="badge-count" id="countRejected">0</span>
-      </div>
-      <div id="rejectedList"></div>
-    </section>
-  </div>
-</div>
-
-<!-- модальное окно (подпись / подтверждение) -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal-box">
-    <h3 id="modalTitle">Подтверждение</h3>
-    <p id="modalMessage">Вы уверены, что хотите подписать документ?</p>
-    <div class="modal-actions">
-      <button class="modal-btn" id="modalCancel">Отмена</button>
-      <button class="modal-btn primary" id="modalConfirm">Подтвердить</button>
+            <!-- ОТВЕРГНУТЫЕ -->
+            <section class="doc-section" data-status="rejected">
+                <div class="section-header">
+                    <h2>Отвергнутые</h2>
+                    <span class="badge-count" id="countRejected">0</span>
+                </div>
+                <div id="rejectedList"></div>
+            </section>
+        </div>
     </div>
-  </div>
-</div>
 
-<script>
-  (function() {
-    // ---------- НАЧАЛЬНЫЕ ДАННЫЕ ----------
-    let documents = [
-      { id: 1, name: 'Договор_поставки_2026.pdf', status: 'unverified' },
-      { id: 2, name: 'Акт_приема_работ_№45.docx', status: 'unverified' },
-      { id: 3, name: 'Счет_фактура_12_ООО_Ромашка.pdf', status: 'verified' },
-      { id: 4, name: 'Доверенность_№78_от_15.03.pdf', status: 'verified' },
-      { id: 5, name: 'Заявление_на_возврат_ТМЦ.docx', status: 'rejected' },
-      { id: 6, name: 'Договор_аренды_склада.pdf', status: 'rejected' },
-      { id: 7, name: 'Спецификация_к_договору_45.pdf', status: 'unverified' },
-      { id: 8, name: 'Акт_сверки_взаиморасчетов.xlsx', status: 'verified' },
-    ];
+    <!-- модальное окно (подпись / подтверждение) -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+            <h3 id="modalTitle">Подтверждение</h3>
+            <p id="modalMessage">Вы уверены, что хотите подписать документ?</p>
+            <div class="modal-actions">
+                <button class="modal-btn" id="modalCancel">Отмена</button>
+                <button class="modal-btn primary" id="modalConfirm">Подтвердить</button>
+            </div>
+        </div>
+    </div>
 
-    // ---------- РЕФЫ ----------
-    const unverifiedList = document.getElementById('unverifiedList');
-    const verifiedList = document.getElementById('verifiedList');
-    const rejectedList = document.getElementById('rejectedList');
-    const countUnverified = document.getElementById('countUnverified');
-    const countVerified = document.getElementById('countVerified');
-    const countRejected = document.getElementById('countRejected');
+    <script>
+        (function () {
+            // ---------- НАЧАЛЬНЫЕ ДАННЫЕ ----------
+            let documents = [
+                {id: 1, name: 'Договор_поставки_2026.pdf', status: 'unverified'},
+                {id: 2, name: 'Акт_приема_работ_№45.docx', status: 'unverified'},
+                {id: 3, name: 'Счет_фактура_12_ООО_Ромашка.pdf', status: 'verified'},
+                {id: 4, name: 'Доверенность_№78_от_15.03.pdf', status: 'verified'},
+                {id: 5, name: 'Заявление_на_возврат_ТМЦ.docx', status: 'rejected'},
+                {id: 6, name: 'Договор_аренды_склада.pdf', status: 'rejected'},
+                {id: 7, name: 'Спецификация_к_договору_45.pdf', status: 'unverified'},
+                {id: 8, name: 'Акт_сверки_взаиморасчетов.xlsx', status: 'verified'},
+            ];
 
-    const modalOverlay = document.getElementById('modalOverlay');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalMessage = document.getElementById('modalMessage');
-    const modalConfirm = document.getElementById('modalConfirm');
-    const modalCancel = document.getElementById('modalCancel');
+            // ---------- РЕФЫ ----------
+            const unverifiedList = document.getElementById('unverifiedList');
+            const verifiedList = document.getElementById('verifiedList');
+            const rejectedList = document.getElementById('rejectedList');
+            const countUnverified = document.getElementById('countUnverified');
+            const countVerified = document.getElementById('countVerified');
+            const countRejected = document.getElementById('countRejected');
 
-    // текущий активный документ для модалки и действие
-    let activeDocId = null;
-    let activeAction = null;
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const modalConfirm = document.getElementById('modalConfirm');
+            const modalCancel = document.getElementById('modalCancel');
 
-    // ---------- ОТРИСОВКА ----------
-    function render() {
-      const unverified = documents.filter(d => d.status === 'unverified');
-      const verified = documents.filter(d => d.status === 'verified');
-      const rejected = documents.filter(d => d.status === 'rejected');
+            // текущий активный документ для модалки и действие
+            let activeDocId = null;
+            let activeAction = null;
 
-      countUnverified.textContent = unverified.length;
-      countVerified.textContent = verified.length;
-      countRejected.textContent = rejected.length;
+            // ---------- ОТРИСОВКА ----------
+            function render() {
+                const unverified = documents.filter(d => d.status === 'unverified');
+                const verified = documents.filter(d => d.status === 'verified');
+                const rejected = documents.filter(d => d.status === 'rejected');
 
-      renderList(unverifiedList, unverified, 'unverified');
-      renderList(verifiedList, verified, 'verified');
-      renderList(rejectedList, rejected, 'rejected');
+                countUnverified.textContent = unverified.length;
+                countVerified.textContent = verified.length;
+                countRejected.textContent = rejected.length;
 
-      document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
-    }
+                renderList(unverifiedList, unverified, 'unverified');
+                renderList(verifiedList, verified, 'verified');
+                renderList(rejectedList, rejected, 'rejected');
 
-    function renderList(container, docs, status) {
-      if (!container) return;
-      if (docs.length === 0) {
-        container.innerHTML = `<div class="empty-state">Нет документов</div>`;
-        return;
-      }
+                document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
+            }
 
-      let html = '';
-      docs.forEach(doc => {
-        // определяем класс статуса для карточки
-        let statusClass = '';
-        if (status === 'unverified') statusClass = 'status-unverified';
-        else if (status === 'verified') statusClass = 'status-verified';
-        else if (status === 'rejected') statusClass = 'status-rejected';
+            function renderList(container, docs, status) {
+                if (!container) return;
+                if (docs.length === 0) {
+                    container.innerHTML = `<div class="empty-state">Нет документов</div>`;
+                    return;
+                }
 
-        html += `
+                let html = '';
+                docs.forEach(doc => {
+                    // определяем класс статуса для карточки
+                    let statusClass = '';
+                    if (status === 'unverified') statusClass = 'status-unverified';
+                    else if (status === 'verified') statusClass = 'status-verified';
+                    else if (status === 'rejected') statusClass = 'status-rejected';
+
+                    html += `
           <div class="doc-item ${statusClass}" data-doc-id="${doc.id}">
             <span class="doc-name">${escapeHtml(doc.name)}</span>
             <div class="doc-actions">
@@ -135,185 +137,186 @@
             </div>
           </div>
         `;
-      });
-      container.innerHTML = html;
+                });
+                container.innerHTML = html;
 
-      container.querySelectorAll('.dots-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          const docId = this.dataset.docId;
-          toggleDropdown(docId);
-        });
-      });
+                container.querySelectorAll('.dots-btn').forEach(btn => {
+                    btn.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        const docId = this.dataset.docId;
+                        toggleDropdown(docId);
+                    });
+                });
 
-      container.querySelectorAll('.dropdown-item').forEach(item => {
-        item.addEventListener('click', function(e) {
-          e.stopPropagation();
-          const docId = this.dataset.docId;
-          const action = this.dataset.action;
-          if (!docId) return;
-          handleAction(parseInt(docId), action);
-          closeAllDropdowns();
-        });
-      });
-    }
+                container.querySelectorAll('.dropdown-item').forEach(item => {
+                    item.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        const docId = this.dataset.docId;
+                        const action = this.dataset.action;
+                        if (!docId) return;
+                        handleAction(parseInt(docId), action);
+                        closeAllDropdowns();
+                    });
+                });
+            }
 
-    function getDropdownItems(doc, status) {
-      let items = '';
-      if (status === 'unverified') {
-        items += `<button class="dropdown-item success" data-doc-id="${doc.id}" data-action="verify">Подтвердить</button>`;
-        items += `<button class="dropdown-item danger" data-doc-id="${doc.id}" data-action="reject">Отвергнуть</button>`;
-      } else if (status === 'verified') {
-        items += `<button class="dropdown-item primary" data-doc-id="${doc.id}" data-action="sign">Подпись</button>`;
-        items += `<button class="dropdown-item warning" data-doc-id="${doc.id}" data-action="restore">Вернуть в непроверенные</button>`;
-      } else if (status === 'rejected') {
-        items += `<button class="dropdown-item warning" data-doc-id="${doc.id}" data-action="restore">Вернуть в непроверенные</button>`;
-        items += `<button class="dropdown-item success" data-doc-id="${doc.id}" data-action="force-verify">Подтвердить</button>`;
-      }
-      return items;
-    }
+            function getDropdownItems(doc, status) {
+                let items = '';
+                if (status === 'unverified') {
+                    items += `<button class="dropdown-item success" data-doc-id="${doc.id}" data-action="verify">Подтвердить</button>`;
+                    items += `<button class="dropdown-item danger" data-doc-id="${doc.id}" data-action="reject">Отвергнуть</button>`;
+                } else if (status === 'verified') {
+                    items += `<button class="dropdown-item primary" data-doc-id="${doc.id}" data-action="sign">Подпись</button>`;
+                    items += `<button class="dropdown-item warning" data-doc-id="${doc.id}" data-action="restore">Вернуть в непроверенные</button>`;
+                } else if (status === 'rejected') {
+                    items += `<button class="dropdown-item warning" data-doc-id="${doc.id}" data-action="restore">Вернуть в непроверенные</button>`;
+                    items += `<button class="dropdown-item success" data-doc-id="${doc.id}" data-action="force-verify">Подтвердить</button>`;
+                }
+                return items;
+            }
 
-    // ---------- ВСПОМОГАТЕЛЬНЫЕ ----------
-    function escapeHtml(unsafe) {
-      return unsafe.replace(/[&<>"]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        if (m === '"') return '&quot;';
-        return m;
-      });
-    }
+            // ---------- ВСПОМОГАТЕЛЬНЫЕ ----------
+            function escapeHtml(unsafe) {
+                return unsafe.replace(/[&<>"]/g, function (m) {
+                    if (m === '&') return '&amp;';
+                    if (m === '<') return '&lt;';
+                    if (m === '>') return '&gt;';
+                    if (m === '"') return '&quot;';
+                    return m;
+                });
+            }
 
-    function toggleDropdown(docId) {
-      const dropdown = document.querySelector(`.dropdown-menu[data-dropdown="${docId}"]`);
-      if (!dropdown) return;
-      document.querySelectorAll('.dropdown-menu.open').forEach(m => {
-        if (m.dataset.dropdown !== String(docId)) m.classList.remove('open');
-      });
-      dropdown.classList.toggle('open');
-    }
+            function toggleDropdown(docId) {
+                const dropdown = document.querySelector(`.dropdown-menu[data-dropdown="${docId}"]`);
+                if (!dropdown) return;
+                document.querySelectorAll('.dropdown-menu.open').forEach(m => {
+                    if (m.dataset.dropdown !== String(docId)) m.classList.remove('open');
+                });
+                dropdown.classList.toggle('open');
+            }
 
-    function closeAllDropdowns() {
-      document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
-    }
+            function closeAllDropdowns() {
+                document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
+            }
 
-    // ---------- ОБРАБОТКА ДЕЙСТВИЙ ----------
-    function handleAction(docId, action) {
-      const doc = documents.find(d => d.id === docId);
-      if (!doc) return;
+            // ---------- ОБРАБОТКА ДЕЙСТВИЙ ----------
+            function handleAction(docId, action) {
+                const doc = documents.find(d => d.id === docId);
+                if (!doc) return;
 
-      if (action === 'sign') {
-        activeDocId = docId;
-        activeAction = 'sign';
-        modalTitle.textContent = 'Подпись документа';
-        modalMessage.textContent = `Вы действительно хотите подписать "${doc.name}"?`;
-        modalConfirm.className = 'modal-btn primary';
-        modalConfirm.textContent = 'Подписать';
-        modalOverlay.classList.add('active');
-        return;
-      }
+                if (action === 'sign') {
+                    activeDocId = docId;
+                    activeAction = 'sign';
+                    modalTitle.textContent = 'Подпись документа';
+                    modalMessage.textContent = `Вы действительно хотите подписать "${doc.name}"?`;
+                    modalConfirm.className = 'modal-btn primary';
+                    modalConfirm.textContent = 'Подписать';
+                    modalOverlay.classList.add('active');
+                    return;
+                }
 
-      if (action === 'verify' || action === 'force-verify') {
-        if (confirm(`Подтвердить документ "${doc.name}"?`)) {
-          doc.status = 'verified';
-          render();
-        }
-        return;
-      }
+                if (action === 'verify' || action === 'force-verify') {
+                    if (confirm(`Подтвердить документ "${doc.name}"?`)) {
+                        doc.status = 'verified';
+                        render();
+                    }
+                    return;
+                }
 
-      if (action === 'reject') {
-        if (confirm(`Отвергнуть документ "${doc.name}"?`)) {
-          doc.status = 'rejected';
-          render();
-        }
-        return;
-      }
+                if (action === 'reject') {
+                    if (confirm(`Отвергнуть документ "${doc.name}"?`)) {
+                        doc.status = 'rejected';
+                        render();
+                    }
+                    return;
+                }
 
-      if (action === 'restore') {
-        if (confirm(`Вернуть документ "${doc.name}" в непроверенные?`)) {
-          doc.status = 'unverified';
-          render();
-        }
-        return;
-      }
-    }
+                if (action === 'restore') {
+                    if (confirm(`Вернуть документ "${doc.name}" в непроверенные?`)) {
+                        doc.status = 'unverified';
+                        render();
+                    }
+                    return;
+                }
+            }
 
-    // ---------- МОДАЛКА (подтверждение подписи) ----------
-    function closeModal() {
-      modalOverlay.classList.remove('active');
-      activeDocId = null;
-      activeAction = null;
-    }
+            // ---------- МОДАЛКА (подтверждение подписи) ----------
+            function closeModal() {
+                modalOverlay.classList.remove('active');
+                activeDocId = null;
+                activeAction = null;
+            }
 
-    modalCancel.addEventListener('click', closeModal);
-    modalOverlay.addEventListener('click', function(e) {
-      if (e.target === modalOverlay) closeModal();
-    });
+            modalCancel.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', function (e) {
+                if (e.target === modalOverlay) closeModal();
+            });
 
-    modalConfirm.addEventListener('click', function() {
-      if (activeDocId === null || activeAction !== 'sign') {
-        closeModal();
-        return;
-      }
-      const doc = documents.find(d => d.id === activeDocId);
-      if (doc) {
-        alert(`Документ "${doc.name}" подписан.`);
-      }
-      closeModal();
-      render();
-    });
+            modalConfirm.addEventListener('click', function () {
+                if (activeDocId === null || activeAction !== 'sign') {
+                    closeModal();
+                    return;
+                }
+                const doc = documents.find(d => d.id === activeDocId);
+                if (doc) {
+                    alert(`Документ "${doc.name}" подписан.`);
+                }
+                closeModal();
+                render();
+            });
 
-    // ---------- ПЕРЕКЛЮЧЕНИЕ ТЕМЫ (с учётом системной) ----------
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    const themeLabel = document.getElementById('themeLabel');
-    let currentTheme = 'light'; 
+            // ---------- ПЕРЕКЛЮЧЕНИЕ ТЕМЫ (с учётом системной) ----------
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const themeLabel = document.getElementById('themeLabel');
+            let currentTheme = 'light';
 
-    function applyTheme(theme) {
-      document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : '');
-      currentTheme = theme;
-      if (theme === 'dark') {
-        themeIcon.textContent = '☀️';
-        themeLabel.textContent = 'Светлая';
-      } else {
-        themeIcon.textContent = '🌙';
-        themeLabel.textContent = 'Тёмная';
-      }
-    }
+            function applyTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : '');
+                currentTheme = theme;
+                if (theme === 'dark') {
+                    themeIcon.textContent = '☀️';
+                    themeLabel.textContent = 'Светлая';
+                } else {
+                    themeIcon.textContent = '🌙';
+                    themeLabel.textContent = 'Тёмная';
+                }
+            }
 
-    function getSystemTheme() {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
+            function getSystemTheme() {
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
 
-    const systemTheme = getSystemTheme();
-    applyTheme(systemTheme);
+            const systemTheme = getSystemTheme();
+            applyTheme(systemTheme);
 
-    const systemThemeMedia = window.matchMedia('(prefers-color-scheme: dark)');
-    let manualOverride = false;
+            const systemThemeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+            let manualOverride = false;
 
-    systemThemeMedia.addEventListener('change', (e) => {
-      if (!manualOverride) {
-        applyTheme(e.matches ? 'dark' : 'light');
-      }
-    });
+            systemThemeMedia.addEventListener('change', (e) => {
+                if (!manualOverride) {
+                    applyTheme(e.matches ? 'dark' : 'light');
+                }
+            });
 
-    themeToggle.addEventListener('click', function() {
-      manualOverride = true;
-      const next = currentTheme === 'light' ? 'dark' : 'light';
-      applyTheme(next);
-    });
+            themeToggle.addEventListener('click', function () {
+                manualOverride = true;
+                const next = currentTheme === 'light' ? 'dark' : 'light';
+                applyTheme(next);
+            });
 
-    // ---------- ЗАКРЫТИЕ ДРОПДАУНА ПО КЛИКУ ВНЕ ----------
-    document.addEventListener('click', function(e) {
-      const target = e.target;
-      if (!target.closest('.doc-actions')) {
-        closeAllDropdowns();
-      }
-    });
+            // ---------- ЗАКРЫТИЕ ДРОПДАУНА ПО КЛИКУ ВНЕ ----------
+            document.addEventListener('click', function (e) {
+                const target = e.target;
+                if (!target.closest('.doc-actions')) {
+                    closeAllDropdowns();
+                }
+            });
 
-    // ---------- ПЕРВЫЙ РЕНДЕР ----------
-    render();
-  })();
-</script>
+            // ---------- ПЕРВЫЙ РЕНДЕР ----------
+            render();
+        })();
+    </script>
 </body>
+
 </html>
