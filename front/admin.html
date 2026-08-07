@@ -14,8 +14,9 @@
         <!-- шапка -->
         <header class="admin-header">
             <h1>Панель документов</h1>
-            <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
-                <span id="themeIcon">🌙</span> <span id="themeLabel">Тёмная</span>
+            <button class="theme-toggle" id="themeToggle" type="button" aria-label="Переключить тему"
+                title="Переключить тему">
+                <span id="themeIcon">🌙</span>
             </button>
         </header>
 
@@ -274,12 +275,18 @@
             function applyTheme(theme) {
                 document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : '');
                 currentTheme = theme;
-                if (theme === 'dark') {
-                    themeIcon.textContent = '☀️';
-                    themeLabel.textContent = 'Светлая';
-                } else {
-                    themeIcon.textContent = '🌙';
-                    themeLabel.textContent = 'Тёмная';
+
+                if (themeIcon) {
+                    if (theme === 'dark') {
+                        themeIcon.textContent = '☀️';
+                    } else {
+                        themeIcon.textContent = '🌙';
+                    }
+                }
+
+                // Если элемент themeLabel всё же есть в HTML, очищаем его или скрываем
+                if (themeLabel) {
+                    themeLabel.textContent = '';
                 }
             }
 
@@ -299,11 +306,13 @@
                 }
             });
 
-            themeToggle.addEventListener('click', function () {
-                manualOverride = true;
-                const next = currentTheme === 'light' ? 'dark' : 'light';
-                applyTheme(next);
-            });
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function () {
+                    manualOverride = true;
+                    const next = currentTheme === 'light' ? 'dark' : 'light';
+                    applyTheme(next);
+                });
+            }
 
             // ---------- ЗАКРЫТИЕ ДРОПДАУНА ПО КЛИКУ ВНЕ ----------
             document.addEventListener('click', function (e) {

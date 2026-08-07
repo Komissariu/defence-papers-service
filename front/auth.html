@@ -1,356 +1,360 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Аутентификация • вход → 2FA</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Аутентификация • вход → 2FA</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <div class="auth-container" id="appContainer">
-    <!-- шапка -->
-    <div class="auth-header">
-      <h1>Вход</h1>
-      <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
-        <span id="themeIcon">🌙</span>
-      </button>
-    </div>
-
-    <!-- вкладки -->
-    <div class="tabs" role="tablist">
-      <button class="tab-btn active" data-panel="login" role="tab">Вход</button>
-      <button class="tab-btn" data-panel="register" role="tab">Регистрация</button>
-      <button class="tab-btn" data-panel="twofa" role="tab" id="twofaTab" disabled>2FA</button>
-    </div>
-
-    <!-- статусное сообщение -->
-    <div id="statusMessage" class="status-msg"></div>
-
-    <!-- ===== ПАНЕЛЬ ВХОД ===== -->
-    <div id="panel-login" class="auth-panel fade-in" role="tabpanel">
-      <div class="form-group">
-        <label for="loginEmail">Электронная почта</label>
-        <input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email">
-      </div>
-      <div class="form-group">
-        <label for="loginPassword">Пароль</label>
-        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
-      </div>
-      <button class="btn-primary" id="loginBtn">Войти → 2FA</button>
-      <div class="form-footer">
-        Нет аккаунта? <a id="switchToRegister">Зарегистрироваться</a>
-      </div>
-    </div>
-
-    <!-- ===== ПАНЕЛЬ РЕГИСТРАЦИЯ (расширенная) ===== -->
-    <div id="panel-register" class="auth-panel hidden fade-in" role="tabpanel">
-      <div class="form-group">
-        <label for="regFullName">ФИО</label>
-        <input type="text" id="regFullName" placeholder="Иванов Иван Иванович" autocomplete="name">
-      </div>
-      <div class="form-group">
-        <label for="regBirthDate">Дата рождения</label>
-        <input type="date" id="regBirthDate">
-      </div>
-      <div class="form-group">
-        <label for="regPhone">Номер телефона</label>
-        <input type="tel" id="regPhone" placeholder="+7 (999) 123-45-67" autocomplete="tel">
-      </div>
-      <div class="form-divider"></div>
-      <div class="form-group">
-        <label for="regEmail">Электронная почта</label>
-        <input type="email" id="regEmail" placeholder="your@email.com" autocomplete="email">
-      </div>
-      <div class="form-group">
-        <label for="regPassword">Пароль</label>
-        <input type="password" id="regPassword" placeholder="минимум 6 символов" autocomplete="new-password">
-      </div>
-      <button class="btn-primary" id="registerBtn">Создать аккаунт</button>
-      <div class="form-footer">
-        Уже есть аккаунт? <a id="switchToLogin">Войти</a>
-      </div>
-    </div>
-
-    <!-- ===== ПАНЕЛЬ 2FA (временный код) ===== -->
-    <div id="panel-twofa" class="auth-panel hidden fade-in" role="tabpanel">
-      <div class="form-group">
-        <label for="twofaCode">Введите 6-значный код</label>
-        <div class="code-input-row">
-          <input type="text" id="twofaCode" maxlength="6" placeholder="0 0 0 0 0 0" inputmode="numeric" autocomplete="one-time-code">
+    <div class="auth-container" id="appContainer">
+        <!-- шапка -->
+        <div class="auth-header">
+            <h1>Вход</h1>
+            <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+                <span id="themeIcon">🌙</span>
+            </button>
         </div>
-        <div class="twofa-timer">
-          <span class="code-hint">Код из приложения-аутентификатора</span>
-          <span class="timer-badge" id="timerBadge">⏱ 30 с</span>
+
+        <!-- вкладки -->
+        <div class="tabs" role="tablist">
+            <button class="tab-btn active" data-panel="login" role="tab">Вход</button>
+            <button class="tab-btn" data-panel="register" role="tab">Регистрация</button>
+            <button class="tab-btn" data-panel="twofa" role="tab" id="twofaTab" disabled>2FA</button>
         </div>
-      </div>
-      <button class="btn-primary" id="twofaBtn">Подтвердить</button>
-      <div class="form-footer">
-        <a id="resendCodeLink" style="cursor:pointer;">Отправить заново</a>
-        <span style="margin:0 0.3rem;color:var(--text-muted)">·</span>
-        <a id="backToLoginFrom2fa" style="cursor:pointer;">Выйти</a>
-      </div>
+
+        <!-- статусное сообщение -->
+        <div id="statusMessage" class="status-msg"></div>
+
+        <!-- ===== ПАНЕЛЬ ВХОД ===== -->
+        <div id="panel-login" class="auth-panel fade-in" role="tabpanel">
+            <div class="form-group">
+                <label for="loginEmail">Электронная почта</label>
+                <input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Пароль</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+            </div>
+            <button class="btn-primary" id="loginBtn">Войти → 2FA</button>
+            <div class="form-footer">
+                Нет аккаунта? <a id="switchToRegister">Зарегистрироваться</a>
+            </div>
+        </div>
+
+        <!-- ===== ПАНЕЛЬ РЕГИСТРАЦИЯ (расширенная) ===== -->
+        <div id="panel-register" class="auth-panel hidden fade-in" role="tabpanel">
+            <div class="form-group">
+                <label for="regFullName">ФИО</label>
+                <input type="text" id="regFullName" placeholder="Иванов Иван Иванович" autocomplete="name">
+            </div>
+            <div class="form-group">
+                <label for="regBirthDate">Дата рождения</label>
+                <input type="date" id="regBirthDate" autocomplete="bday">
+            </div>
+            <div class="form-group">
+                <label for="regPhone">Номер телефона</label>
+                <input type="tel" id="regPhone" placeholder="+7 (999) 123-45-67" autocomplete="tel">
+            </div>
+            <div class="form-divider"></div>
+            <div class="form-group">
+                <label for="regEmail">Электронная почта</label>
+                <input type="email" id="regEmail" placeholder="your@email.com" autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label for="regPassword">Пароль</label>
+                <input type="password" id="regPassword" placeholder="минимум 6 символов" autocomplete="new-password">
+            </div>
+            <button class="btn-primary" id="registerBtn">Создать аккаунт</button>
+            <div class="form-footer">
+                Уже есть аккаунт? <a id="switchToLogin">Войти</a>
+            </div>
+        </div>
+
+        <!-- ===== ПАНЕЛЬ 2FA (временный код) ===== -->
+        <div id="panel-twofa" class="auth-panel hidden fade-in" role="tabpanel">
+            <div class="form-group">
+                <label for="twofaCode">Введите 6-значный код</label>
+                <div class="code-input-row">
+                    <input type="text" id="twofaCode" maxlength="6" placeholder="0 0 0 0 0 0" inputmode="numeric"
+                        autocomplete="one-time-code">
+                </div>
+                <div class="twofa-timer">
+                    <span class="code-hint">Код из приложения-аутентификатора</span>
+                    <span class="timer-badge" id="timerBadge">⏱ 30 с</span>
+                </div>
+            </div>
+            <button class="btn-primary" id="twofaBtn">Подтвердить</button>
+            <div class="form-footer">
+                <a id="resendCodeLink" style="cursor:pointer;">Отправить заново</a>
+                <span style="margin:0 0.3rem;color:var(--text-muted)">·</span>
+                <a id="backToLoginFrom2fa" style="cursor:pointer;">Выйти</a>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <script>
-    (function() {
-      'use strict';
+    <script>
+        (function () {
+            'use strict';
 
-      // ----- DOM -----
-      const container = document.getElementById('appContainer');
-      const themeToggle = document.getElementById('themeToggle');
-      const themeIcon = document.getElementById('themeIcon');
+            // ----- DOM -----
+            const container = document.getElementById('appContainer');
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
 
-      const panels = {
-        login: document.getElementById('panel-login'),
-        register: document.getElementById('panel-register'),
-        twofa: document.getElementById('panel-twofa'),
-      };
+            const panels = {
+                login: document.getElementById('panel-login'),
+                register: document.getElementById('panel-register'),
+                twofa: document.getElementById('panel-twofa'),
+            };
 
-      const tabs = document.querySelectorAll('.tab-btn');
-      const twofaTab = document.getElementById('twofaTab');
-      const switchToRegister = document.getElementById('switchToRegister');
-      const switchToLogin = document.getElementById('switchToLogin');
-      const backToLoginFrom2fa = document.getElementById('backToLoginFrom2fa');
-      const resendCodeLink = document.getElementById('resendCodeLink');
+            const tabs = document.querySelectorAll('.tab-btn');
+            const twofaTab = document.getElementById('twofaTab');
+            const switchToRegister = document.getElementById('switchToRegister');
+            const switchToLogin = document.getElementById('switchToLogin');
+            const backToLoginFrom2fa = document.getElementById('backToLoginFrom2fa');
+            const resendCodeLink = document.getElementById('resendCodeLink');
 
-      const loginBtn = document.getElementById('loginBtn');
-      const registerBtn = document.getElementById('registerBtn');
-      const twofaBtn = document.getElementById('twofaBtn');
-      const twofaInput = document.getElementById('twofaCode');
-      const timerBadge = document.getElementById('timerBadge');
-      const statusMsg = document.getElementById('statusMessage');
+            const loginBtn = document.getElementById('loginBtn');
+            const registerBtn = document.getElementById('registerBtn');
+            const twofaBtn = document.getElementById('twofaBtn');
+            const twofaInput = document.getElementById('twofaCode');
+            const timerBadge = document.getElementById('timerBadge');
+            const statusMsg = document.getElementById('statusMessage');
 
-      // ----- состояние -----
-      let isLoggedIn = false;
-      let currentTheme = 'light';
+            // ----- состояние -----
+            let isLoggedIn = false;
+            let currentTheme = 'light';
 
-      // ----- тема -----
-      function loadTheme() {
-        const stored = localStorage.getItem('themePreference');
-        if (stored === 'dark' || stored === 'light') {
-          currentTheme = stored;
-        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          currentTheme = 'dark';
-        }
-        applyTheme(currentTheme);
-      }
+            // ----- тема -----
+            function loadTheme() {
+                const stored = localStorage.getItem('themePreference');
+                if (stored === 'dark' || stored === 'light') {
+                    currentTheme = stored;
+                } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    currentTheme = 'dark';
+                }
+                applyTheme(currentTheme);
+            }
 
-      function applyTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
-        currentTheme = theme;
-        localStorage.setItem('themePreference', theme);
-      }
+            function applyTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+                currentTheme = theme;
+                localStorage.setItem('themePreference', theme);
+            }
 
-      function toggleTheme() {
-        applyTheme(currentTheme === 'light' ? 'dark' : 'light');
-      }
-      themeToggle.addEventListener('click', toggleTheme);
+            function toggleTheme() {
+                applyTheme(currentTheme === 'light' ? 'dark' : 'light');
+            }
+            themeToggle.addEventListener('click', toggleTheme);
 
-      // ----- статусные сообщения -----
-      function showStatus(text, type = 'info') {
-        statusMsg.textContent = text;
-        statusMsg.className = 'status-msg show';
-        if (type === 'error') statusMsg.classList.add('error');
-        else if (type === 'success') statusMsg.classList.add('success');
-        clearTimeout(window.statusTimeout);
-        window.statusTimeout = setTimeout(() => {
-          statusMsg.className = 'status-msg';
-        }, 4000);
-      }
+            // ----- статусные сообщения -----
+            function showStatus(text, type = 'info') {
+                statusMsg.textContent = text;
+                statusMsg.className = 'status-msg show';
+                if (type === 'error') statusMsg.classList.add('error');
+                else if (type === 'success') statusMsg.classList.add('success');
+                clearTimeout(window.statusTimeout);
+                window.statusTimeout = setTimeout(() => {
+                    statusMsg.className = 'status-msg';
+                }, 4000);
+            }
 
-      function hideStatus() {
-        statusMsg.className = 'status-msg';
-      }
+            function hideStatus() {
+                statusMsg.className = 'status-msg';
+            }
 
-      // ----- переключение панелей -----
-      function showPanel(panelId) {
-        Object.keys(panels).forEach(key => {
-          panels[key].classList.add('hidden');
-        });
-        if (panels[panelId]) {
-          panels[panelId].classList.remove('hidden');
-          panels[panelId].classList.remove('fade-in');
-          void panels[panelId].offsetWidth;
-          panels[panelId].classList.add('fade-in');
-        }
+            // ----- переключение панелей -----
+            function showPanel(panelId) {
+                Object.keys(panels).forEach(key => {
+                    panels[key].classList.add('hidden');
+                });
+                if (panels[panelId]) {
+                    panels[panelId].classList.remove('hidden');
+                    panels[panelId].classList.remove('fade-in');
+                    void panels[panelId].offsetWidth;
+                    panels[panelId].classList.add('fade-in');
+                }
 
-        tabs.forEach(tab => {
-          tab.classList.remove('active');
-          if (tab.dataset.panel === panelId) {
-            tab.classList.add('active');
-          }
-        });
+                tabs.forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.dataset.panel === panelId) {
+                        tab.classList.add('active');
+                    }
+                });
 
-        if (panelId === 'twofa') {
-          startTimer();
-          twofaInput.value = '';
-          twofaInput.focus();
-        }
+                if (panelId === 'twofa') {
+                    startTimer();
+                    twofaInput.value = '';
+                    twofaInput.focus();
+                }
 
-        hideStatus();
-      }
+                hideStatus();
+            }
 
-      // ----- разблокировка 2FA после входа -----
-      function unlockTwofa() {
-        isLoggedIn = true;
-        twofaTab.disabled = false;
-        twofaTab.classList.remove('disabled');
-        showPanel('twofa');
-        showStatus('Вход выполнен! Введите код 2FA.', 'success');
-      }
+            // ----- разблокировка 2FA после входа -----
+            function unlockTwofa() {
+                isLoggedIn = true;
+                twofaTab.disabled = false;
+                twofaTab.classList.remove('disabled');
+                showPanel('twofa');
+                showStatus('Вход выполнен! Введите код 2FA.', 'success');
+            }
 
-      // ----- кнопка ВХОД (пустышка) -----
-      function handleLogin(e) {
-        e.preventDefault();
-        const email = document.getElementById('loginEmail').value.trim();
-        const pass = document.getElementById('loginPassword').value.trim();
+            // ----- кнопка ВХОД (пустышка) -----
+            function handleLogin(e) {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value.trim();
+                const pass = document.getElementById('loginPassword').value.trim();
 
-        if (!email || !pass) {
-          showStatus('Заполните почту и пароль.', 'error');
-          return;
-        }
+                if (!email || !pass) {
+                    showStatus('Заполните почту и пароль.', 'error');
+                    return;
+                }
 
-        unlockTwofa();
-      }
+                unlockTwofa();
+            }
 
-      // ----- кнопка РЕГИСТРАЦИЯ (демо) -----
-      function handleRegister(e) {
-        e.preventDefault();
-        const fullName = document.getElementById('regFullName').value.trim();
-        const birthDate = document.getElementById('regBirthDate').value;
-        const phone = document.getElementById('regPhone').value.trim();
-        const email = document.getElementById('regEmail').value.trim();
-        const pass = document.getElementById('regPassword').value.trim();
+            // ----- кнопка РЕГИСТРАЦИЯ (демо) -----
+            function handleRegister(e) {
+                e.preventDefault();
+                const fullName = document.getElementById('regFullName').value.trim();
+                const birthDate = document.getElementById('regBirthDate').value;
+                const phone = document.getElementById('regPhone').value.trim();
+                const email = document.getElementById('regEmail').value.trim();
+                const pass = document.getElementById('regPassword').value.trim();
 
-        if (!fullName || !birthDate || !phone || !email || !pass) {
-          showStatus('Заполните все поля регистрации.', 'error');
-          return;
-        }
-        if (pass.length < 6) {
-          showStatus('Пароль должен быть минимум 6 символов.', 'error');
-          return;
-        }
-        if (!email.includes('@')) {
-          showStatus('Введите корректный email.', 'error');
-          return;
-        }
+                if (!fullName || !birthDate || !phone || !email || !pass) {
+                    showStatus('Заполните все поля регистрации.', 'error');
+                    return;
+                }
+                if (pass.length < 6) {
+                    showStatus('Пароль должен быть минимум 6 символов.', 'error');
+                    return;
+                }
+                if (!email.includes('@')) {
+                    showStatus('Введите корректный email.', 'error');
+                    return;
+                }
 
-        showStatus('Аккаунт создан! Теперь войдите.', 'success');
-        document.getElementById('loginEmail').value = email;
-        document.getElementById('loginPassword').value = pass;
-        showPanel('login');
-      }
+                showStatus('Аккаунт создан! Теперь войдите.', 'success');
+                document.getElementById('loginEmail').value = email;
+                document.getElementById('loginPassword').value = pass;
+                showPanel('login');
+            }
 
-      // ----- 2FA подтверждение (демо) -----
-      function handleTwofa(e) {
-        e.preventDefault();
-        const code = twofaInput.value.trim().replace(/\s/g, '');
-        if (!code || code.length < 6) {
-          showStatus('Введите 6-значный код.', 'error');
-          return;
-        }
-        showStatus('Код подтверждён! Добро пожаловать!', 'success');
-      }
+            // ----- 2FA подтверждение (демо) -----
+            function handleTwofa(e) {
+                e.preventDefault();
+                const code = twofaInput.value.trim().replace(/\s/g, '');
+                if (!code || code.length < 6) {
+                    showStatus('Введите 6-значный код.', 'error');
+                    return;
+                }
+                showStatus('Код подтверждён! Добро пожаловать!', 'success');
+            }
 
-      // ----- таймер для 2FA -----
-      let timerInterval = null;
-      let secondsLeft = 30;
+            // ----- таймер для 2FA -----
+            let timerInterval = null;
+            let secondsLeft = 30;
 
-      function updateTimerDisplay() {
-        timerBadge.textContent = `⏱ ${secondsLeft} с`;
-        if (secondsLeft <= 5) {
-          timerBadge.style.color = '#dc2626';
-        } else {
-          timerBadge.style.color = '';
-        }
-        if (secondsLeft <= 0) {
-          timerBadge.textContent = '⏱ истёк';
-          timerBadge.style.color = '#dc2626';
-          clearInterval(timerInterval);
-          timerInterval = null;
-        }
-      }
+            function updateTimerDisplay() {
+                timerBadge.textContent = `⏱ ${secondsLeft} с`;
+                if (secondsLeft <= 5) {
+                    timerBadge.style.color = '#dc2626';
+                } else {
+                    timerBadge.style.color = '';
+                }
+                if (secondsLeft <= 0) {
+                    timerBadge.textContent = '⏱ истёк';
+                    timerBadge.style.color = '#dc2626';
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+            }
 
-      function startTimer() {
-        if (timerInterval) {
-          clearInterval(timerInterval);
-          timerInterval = null;
-        }
-        secondsLeft = 30;
-        updateTimerDisplay();
-        timerInterval = setInterval(() => {
-          secondsLeft -= 1;
-          updateTimerDisplay();
-          if (secondsLeft <= 0) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-          }
-        }, 1000);
-      }
+            function startTimer() {
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+                secondsLeft = 30;
+                updateTimerDisplay();
+                timerInterval = setInterval(() => {
+                    secondsLeft -= 1;
+                    updateTimerDisplay();
+                    if (secondsLeft <= 0) {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                    }
+                }, 1000);
+            }
 
-      function resetTimer() {
-        startTimer();
-        twofaInput.value = '';
-        twofaInput.focus();
-        showStatus('Новый код отправлен (демо).', 'info');
-      }
+            function resetTimer() {
+                startTimer();
+                twofaInput.value = '';
+                twofaInput.focus();
+                showStatus('Новый код отправлен (демо).', 'info');
+            }
 
-      // ----- навигация -----
-      tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-          const panel = this.dataset.panel;
-          if (!panel) return;
-          if (panel === 'twofa' && !isLoggedIn) {
-            showStatus('Сначала выполните вход.', 'error');
-            return;
-          }
-          showPanel(panel);
-        });
-      });
+            // ----- навигация -----
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    const panel = this.dataset.panel;
+                    if (!panel) return;
+                    if (panel === 'twofa' && !isLoggedIn) {
+                        showStatus('Сначала выполните вход.', 'error');
+                        return;
+                    }
+                    showPanel(panel);
+                });
+            });
 
-      switchToRegister.addEventListener('click', () => showPanel('register'));
-      switchToLogin.addEventListener('click', () => showPanel('login'));
-      backToLoginFrom2fa.addEventListener('click', function() {
-        isLoggedIn = false;
-        twofaTab.disabled = true;
-        twofaTab.classList.add('disabled');
-        showPanel('login');
-        showStatus('Вы вышли из системы.', 'info');
-      });
+            switchToRegister.addEventListener('click', () => showPanel('register'));
+            switchToLogin.addEventListener('click', () => showPanel('login'));
+            backToLoginFrom2fa.addEventListener('click', function () {
+                isLoggedIn = false;
+                twofaTab.disabled = true;
+                twofaTab.classList.add('disabled');
+                showPanel('login');
+                showStatus('Вы вышли из системы.', 'info');
+            });
 
-      resendCodeLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        if (!isLoggedIn) {
-          showStatus('Сначала войдите.', 'error');
-          return;
-        }
-        resetTimer();
-      });
+            resendCodeLink.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (!isLoggedIn) {
+                    showStatus('Сначала войдите.', 'error');
+                    return;
+                }
+                resetTimer();
+            });
 
-      // ----- привязка кнопок -----
-      loginBtn.addEventListener('click', handleLogin);
-      registerBtn.addEventListener('click', handleRegister);
-      twofaBtn.addEventListener('click', handleTwofa);
+            // ----- привязка кнопок -----
+            loginBtn.addEventListener('click', handleLogin);
+            registerBtn.addEventListener('click', handleRegister);
+            twofaBtn.addEventListener('click', handleTwofa);
 
-      // ----- ограничение ввода для 2FA (только цифры) -----
-      twofaInput.addEventListener('input', function() {
-        this.value = this.value.replace(/\D/g, '').slice(0, 6);
-      });
+            // ----- ограничение ввода для 2FA (только цифры) -----
+            twofaInput.addEventListener('input', function () {
+                this.value = this.value.replace(/\D/g, '').slice(0, 6);
+            });
 
-      // ----- быстрый сброс таймера двойным кликом -----
-      timerBadge.addEventListener('dblclick', function() {
-        if (isLoggedIn) resetTimer();
-      });
+            // ----- быстрый сброс таймера двойным кликом -----
+            timerBadge.addEventListener('dblclick', function () {
+                if (isLoggedIn) resetTimer();
+            });
 
-      // ----- инициализация -----
-      loadTheme();
-      showPanel('login');
-      twofaTab.disabled = true;
+            // ----- инициализация -----
+            loadTheme();
+            showPanel('login');
+            twofaTab.disabled = true;
 
-      console.log('Auth flow: login → 2FA (пустышка). Регистрация расширена (ФИО, дата, телефон).');
-    })();
-  </script>
+            console.log('Auth flow: login → 2FA (пустышка). Регистрация расширена (ФИО, дата, телефон).');
+        })();
+    </script>
 </body>
+
 </html>

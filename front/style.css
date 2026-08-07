@@ -66,6 +66,8 @@
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+
+  --calendar-icon-filter: invert(0.8);
 }
 
 /* ==========================================================================
@@ -146,10 +148,13 @@ button {
 }
 
 /* Общие стили для инпутов, текстовых областей и селектов */
+/* Общие стили для инпутов, текстовых областей и селектов */
 input[type="text"],
 input[type="email"],
 input[type="number"],
 input[type="password"],
+input[type="tel"],
+input[type="date"],
 textarea,
 select {
   width: 100%;
@@ -161,6 +166,28 @@ select {
   font-size: 0.95rem;
   font-family: inherit;
   transition: var(--transition);
+}
+
+/* Стилизация и адаптация иконки выбора даты для type="date" */
+input[type="date"] {
+  position: relative;
+  /* Приводим высоту инпута к той же, что у стандартных текстовых полей */
+  min-height: 42px; 
+}
+
+/* Настройка иконки календаря для тёмной и светлой тем */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  border-radius: 4px;
+  opacity: 0.6;
+  transition: var(--transition);
+  /* Делаем иконку контрастной в тёмной теме */
+  filter: var(--calendar-icon-filter, none);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  background-color: var(--bg-surface-hover);
 }
 
 textarea {
