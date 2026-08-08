@@ -1,7 +1,10 @@
 # main.py
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks
+from fastapi.responses import FileResponse
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import os
 
 from database import database
 from models import ThesisFormData, ThesisCreate, UserInfo
@@ -23,7 +26,12 @@ from routers.theses import create_thesis as create_thesis_router
 from utils import parse_russian_date
 from data_assembler import assemble_full_thesis_json
 from routers.auth import get_current_user
+from latex_compiler import LatexCompiler
 
+compiler = LatexCompiler(
+    temp_base="./temp_latex", 
+    project_root=os.path.abspath("./latex_files") 
+)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -42,7 +50,7 @@ app = FastAPI(
 # CORS с поддержкой кук
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080"],   # адрес фронтенда
+    allow_origins=["http://185.11.247.199:8080"],   # адрес фронтенда
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -64,6 +72,41 @@ app.include_router(auth.router)
 # ----------------------------------------------------------------------
 # Эндпоинты, доступные только авторизованным пользователям
 # ----------------------------------------------------------------------
+
+class TexData(BaseModel):
+    # Позволяет принимать динамические ключи вида {"Sources/file.tex": "текст"}
+    class Config:
+        extra = "allow"
+
+@app.post("/api/compile")
+async def compile_latex(data: dict, background_tasks: BackgroundTasks):
+    # 1. Запускаем компиляцию
+    # Передаем словарь напрямую в ваш метод
+    results = compiler.compile_from_files(data)
+    
+    work_dir = results.get("work_dir")
+    pdf_zip_path = results.get("pdf_zip")
+    
+    # Если в логах есть ошибки или архив не создался
+    if not pdf_zip_path or not os.path.exists(pdf_zip_path):
+        # Перед паникой логируем ошибки компиляции
+        errors = "\n".join(results.get("logs", []))
+        # На всякий случай чистим папку, так как эндпоинт прервется
+        compiler.cleanup(work_dir)
+        raise HTTPException(
+            status_code=422, 
+            detail=f"Ошибка компиляции документов. Логи:\n{errors}"
+        )
+    
+    # 2. Добавляем фоновую задачу на удаление временной папки ПОСЛЕ того, как файл улетит клиенту
+    background_tasks.add_task(compiler.cleanup, work_dir)
+    
+    # 3. Отправляем ZIP-архив с готовыми PDF обратно фронтенду
+    return FileResponse(
+        path=pdf_zip_path, 
+        filename="compiled_documents.zip", 
+        media_type="application/zip"
+    )
 
 @app.get("/api/my-theses", tags=["User Theses"])
 async def get_my_theses(user: UserInfo = Depends(get_current_user)):
